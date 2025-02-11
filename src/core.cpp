@@ -6,6 +6,7 @@
 #include "input.hpp"
 #include "networkingSockets.hpp"
 #include "networkingUtils.hpp"
+#include "remotestorage.hpp"
 #include "user_stats.hpp"
 #include "utils.hpp"
 
@@ -27,6 +28,7 @@ EXTERN int luasteam_init(lua_State *L) {
         luasteam::init_input(L);
         luasteam::init_networkingSockets(L);
         luasteam::init_networkingUtils(L);
+        luasteam::init_remotestorage(L);
     } else {
         fprintf(stderr, "Couldn't connect to steam...\nPlease ensure that the following conditions are met:\n* Do you have Steam turned on?\n* If not running from steam, do you have a correct steam_appid.txt file?\n* Is the application running under the same user context as steam?\n* Is a license for the App ID present in your active steam account?\n* Is your App ID correctly set up, i.e. not in ``Release State: Unavailable`` and not missing default packages?\n");
     }
@@ -47,6 +49,7 @@ EXTERN int luasteam_shutdown(lua_State *L) {
     luasteam::shutdown_utils(L);
     luasteam::shutdown_user_stats(L);
     luasteam::shutdown_friends(L);
+    luasteam::shutdown_remotestorage(L);
     luasteam::shutdown_common(L);
     return 0;
 }
@@ -63,6 +66,7 @@ void add_core(lua_State *L) {
     add_func(L, "init", luasteam_init);
     add_func(L, "shutdown", luasteam_shutdown);
     add_func(L, "runCallbacks", luasteam_runCallbacks);
+    add_remotestorage(L);
 }
 
 } // namespace luasteam
