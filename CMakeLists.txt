@@ -1,8 +1,16 @@
 cmake_minimum_required(VERSION 3.15)
 project(luasteam)
 
-# Add LuaJIT as a subdirectory to build it first
-add_subdirectory(LuaJIT)
+# Add FetchContent
+include(FetchContent)
+
+# Fetch LuaJIT
+FetchContent_Declare(
+    luajit
+    GIT_REPOSITORY https://github.com/WohlSoft/LuaJIT.git
+    GIT_TAG v2.1
+)
+FetchContent_MakeAvailable(luajit)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 11)
