@@ -39,6 +39,9 @@ elseif(APPLE)
     set(STEAM_SDK_PATH "${CMAKE_CURRENT_SOURCE_DIR}/sdk/redistributable_bin")
     set(LUAJIT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/third-party")
     
+    # Enable universal binary building
+    set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
+    
     add_library(luasteam SHARED ${SOURCE_FILES})
     
     set_target_properties(luasteam PROPERTIES 
@@ -49,8 +52,12 @@ elseif(APPLE)
     # Set minimum macOS version
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.11")
     
+    # You'll need universal versions of these libraries
     set(STEAM_LIB "${STEAM_SDK_PATH}/osx/libsteam_api.dylib")
-
+    
+    # Configure LuaJIT for universal build
+    set(CMAKE_OSX_ARCHITECTURES_LUAJIT "arm64;x86_64")
+    
 else() # Linux
     set(STEAM_SDK_PATH "${CMAKE_CURRENT_SOURCE_DIR}/sdk/redistributable_bin")
     
@@ -100,7 +107,7 @@ if(WIN32)
         libluajit
     )
 elseif(APPLE)
-    # For macOS, link against the provided static library
+    # For macOS, we need universal binary versions of the libraries
     target_link_libraries(luasteam PRIVATE
         "${STEAM_LIB}"
         "${LUAJIT_PATH}/lib/libluajit-5.1.a"
@@ -118,4 +125,4 @@ install(TARGETS luasteam
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
-) 
+)
